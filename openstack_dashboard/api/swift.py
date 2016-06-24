@@ -27,13 +27,14 @@ from horizon import exceptions
 
 from openstack_dashboard.api import base
 
-
+import logging
 FOLDER_DELIMITER = "/"
 CHUNK_SIZE = getattr(settings, 'SWIFT_FILE_TRANSFER_CHUNK_SIZE', 512 * 1024)
 # Swift ACL
 GLOBAL_READ_ACL = ".r:*"
 LIST_CONTENTS_ACL = ".rlistings"
 
+LOG = logging.getLogger(__name__)
 
 class Container(base.APIDictWrapper):
     pass
@@ -98,6 +99,9 @@ def _metadata_to_header(metadata):
         headers['x-container-read'] = ",".join(public_container_acls)
     elif public is False:
         headers['x-container-read'] = ""
+    for key, value in metadata.items():
+        if key.startswith("X-Container-Meta-"):
+            headers[key] = value
 
     return headers
 
@@ -174,6 +178,12 @@ def swift_get_container(request, container_name, with_data=True):
         'is_public': is_public,
         'public_url': public_url,
     }
+    metadata = {}
+    for header, value in headers.items():
+        if 'x-container-meta-' in header:
+            key = header.partition('x-container-meta-')[2]
+            metadata.update({key: value})
+    container_info.update({'metadata': metadata})
     return Container(container_info)
 
 

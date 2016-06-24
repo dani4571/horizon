@@ -505,6 +505,10 @@ class UpdateMembersStep(Step):
         else:
             return self.slug + "_role_" + role_id
 
+class UpdateMetadataStep(Step):
+
+    template_name = "horizon/common/_metadata.html"
+
 
 @six.python_2_unicode_compatible
 @six.add_metaclass(WorkflowMetaclass)

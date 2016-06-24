@@ -337,6 +337,13 @@ def volume_update(request, volume_id, name, description):
     return cinderclient(request).volumes.update(volume_id,
                                                 **vol_data)
 
+def volume_update_meta(request, volume_id, meta):
+    return cinderclient(request).volumes.set_metadata(volume_id, meta)
+
+
+def volume_delete_meta(request, volume_id, meta):
+    return cinderclient(request).volumes.delete_metadata(volume_id, meta.keys())
+
 
 def volume_reset_state(request, volume_id, state):
     return cinderclient(request).volumes.reset_state(volume_id, state)

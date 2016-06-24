@@ -31,6 +31,7 @@
 
   ContainersController.$inject = [
     'horizon.app.core.openstack-service-api.swift',
+    'horizon.app.core.metadata.modal.service',
     'horizon.dashboard.project.containers.containers-model',
     'horizon.dashboard.project.containers.basePath',
     'horizon.dashboard.project.containers.baseRoute',
@@ -41,10 +42,14 @@
     '$modal'
   ];
 
-  function ContainersController(swiftAPI, containersModel, basePath, baseRoute, containerRoute,
+  function ContainersController(swiftAPI, metadataModalService, containersModel, basePath, baseRoute, containerRoute,
                                 simpleModalService, toastService, $location, $modal)
   {
     var ctrl = this;
+    ctrl.metadata_text = {
+        value: '',
+        format: /^\w*=\w*$/
+    }
     ctrl.model = containersModel;
     ctrl.model.initialize();
     ctrl.baseRoute = baseRoute;
@@ -56,7 +61,8 @@
     ctrl.createContainer = createContainer;
     ctrl.createContainerAction = createContainerAction;
     ctrl.selectContainer = selectContainer;
-
+    ctrl.updateMetadata = updateMetadata;
+    ctrl.deleteMetadata = deleteMetadata;
     //////////
 
     function selectContainer(container) {
@@ -144,6 +150,27 @@
           ctrl.model.containers.push({name: result.name, count: 0, bytes: 0});
         }
       );
+    }
+
+    // update metadata
+    function updateMetadata(container) {
+      var metadata_array = ctrl.metadata_text.value.split("=");
+      var key = metadata_array[0];
+      var val = metadata_array[1];
+      var data = {};
+      data[key] = val;
+      swiftAPI.editContainerMetadata(container.name, data);
+      // re-fetch container details
+      return ctrl.model.fetchContainerDetail(container, true);
+    }
+
+
+    function deleteMetadata(container, key) {
+      var data = {}
+      data[key] = ''
+      swiftAPI.editContainerMetadata(container.name, data);
+      // re-fetch container details
+      return ctrl.model.fetchContainerDetail(container, true);
     }
   }
 })();

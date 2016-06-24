@@ -40,6 +40,7 @@
       createFolder: createFolder,
       deleteContainer: deleteContainer,
       deleteObject: deleteObject,
+      editContainerMetadata: editContainerMetadata,
       getContainer: getContainer,
       getContainers: getContainers,
       getInfo: getInfo,
@@ -179,6 +180,24 @@
       return apiService.put(service.getContainerURL(container) + '/metadata/', data)
         .error(function () {
           toastService.add('error', gettext('Unable to change the container access.'));
+        });
+    }
+
+    /**
+     * @name horizon.app.core.openstack-service-api.swift.setContainerMetadata
+     * @description
+     * Set the container's metadata.
+     *
+     */
+    function editContainerMetadata(container, updated) {
+      var data = {};
+      var key = '';
+      for (key in updated) {
+          data["X-Container-Meta-" + key] = updated[key];
+      }
+      return apiService.put(service.getContainerURL(container) + '/metadata/', data)
+        .error(function () {
+          toastService.add('error', gettext('Unable to change the container metadata.'));
         });
     }
 

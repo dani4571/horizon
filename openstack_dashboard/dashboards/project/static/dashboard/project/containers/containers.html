@@ -62,6 +62,35 @@
                 </span>
               </li>
             </ul>
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label class="control-label" for="metadata">Metadata</label>
+                  <div class="input_fields_wrap">
+
+                  <div ng-repeat="(key,value) in container.metadata" >
+                    <span class="hz-object-label col-lg-7 col-md-12">{$ key $}: {$ value $}</span>
+                    <span class="input-group-btn">
+                      <a href="" ng-click="cc.deleteMetadata(container, key)" class="btn btn-default remove_field">
+                        <span class="fa fa-minus"></span>
+                      </a>
+                    </span>
+                  </div>
+
+                  <div class="input-group">
+                    <input class="form-control" maxlength="255" type="text" name="metadata1" ng-model="cc.metadata_text.value" ng-pattern="cc.metadata_text.format">
+                    <span class="input-group-btn">
+                      <a href="" ng-click="cc.updateMetadata(container)" class="btn btn-default add_field_button">
+                        <span class="fa fa-plus"></span>
+                      </a>
+                    </span>
+                  </div>
+
+                  </div>
+                </div>
+              </div>
+            </div>
+   
           </accordion-group>
         </accordion>
       </div>
