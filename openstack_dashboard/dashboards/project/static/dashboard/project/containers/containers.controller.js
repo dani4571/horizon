@@ -45,6 +45,11 @@
                                 simpleModalService, toastService, $location, $modal)
   {
     var ctrl = this;
+    ctrl.metadata_text = {
+        key: '',
+        value: '',
+        format: /^\w*$/
+    }
     ctrl.model = containersModel;
     ctrl.model.initialize();
     ctrl.baseRoute = baseRoute;
@@ -56,6 +61,8 @@
     ctrl.createContainer = createContainer;
     ctrl.createContainerAction = createContainerAction;
     ctrl.selectContainer = selectContainer;
+    ctrl.updateMetadata = updateMetadata;
+    ctrl.deleteMetadata = deleteMetadata;
 
     //////////
 
@@ -145,5 +152,24 @@
         }
       );
     }
+
+    // update metadata
+    function updateMetadata(container) {
+      var data = {};
+      data[ctrl.metadata_text.key] = ctrl.metadata_text.value;
+      swiftAPI.editContainerMetadata(container.name, data);
+      // re-fetch container details
+      return ctrl.model.fetchContainerDetail(container, true);
+    }
+
+
+    function deleteMetadata(container, key) {
+      var data = {}
+      data[key] = ''
+      swiftAPI.editContainerMetadata(container.name, data);
+      // re-fetch container details
+      return ctrl.model.fetchContainerDetail(container, true);
+    }
+
   }
 })();

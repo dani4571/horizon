@@ -39,6 +39,8 @@ from openstack_dashboard.dashboards.project.images import utils
 from openstack_dashboard.dashboards.project.instances import tables
 from openstack_dashboard.usage import quotas
 
+import json
+
 IMAGE_BACKEND_SETTINGS = getattr(settings, 'OPENSTACK_IMAGE_BACKEND', {})
 IMAGE_FORMAT_CHOICES = IMAGE_BACKEND_SETTINGS.get('image_formats', [])
 VALID_DISK_FORMATS = ('raw', 'vmdk', 'vdi', 'qcow2')
@@ -379,6 +381,13 @@ class CreateForm(forms.SelfHandlingForm):
                 raise ValidationError(error_message)
 
             metadata = {}
+            #metadata = data.get('metadata', None)
+            metadata_list = request.POST.getlist("metadata")
+            if metadata_list:
+                for item in  metadata_list:
+                    input_meta = json.loads(item)
+                    metadata.update(input_meta)
+
 
             if data['type'] == 'no_type':
                 data['type'] = ''

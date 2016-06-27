@@ -34,6 +34,7 @@ from horizon import messages
 from openstack_dashboard import api
 from openstack_dashboard import policy
 
+import json
 
 IMAGE_BACKEND_SETTINGS = getattr(settings, 'OPENSTACK_IMAGE_BACKEND', {})
 IMAGE_FORMAT_CHOICES = IMAGE_BACKEND_SETTINGS.get('image_formats', [])
@@ -262,6 +263,12 @@ class CreateImageForm(forms.SelfHandlingForm):
             meta['copy_from'] = data['image_url']
         else:
             meta['location'] = data['image_url']
+
+        metadata_list = request.POST.getlist("metadata")
+        if metadata_list:
+            for item in metadata_list:
+                input_meta = json.loads(item)
+                meta['properties'].update(input_meta)
 
         try:
             image = api.glance.image_create(request, **meta)

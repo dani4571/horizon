@@ -113,6 +113,34 @@ class Volume(generic.View):
         """
         return api.cinder.volume_get(request, volume_id).to_dict()
 
+@urls.register
+class VolumeMetadata(generic.View):
+    """API for volume metadata.
+    """
+    url_regex = r'cinder/volumes/(?P<volume_id>[^/]+|default)/metadata$'
+
+    @rest_utils.ajax()
+    def get(self, request, volume_id):
+        """Get a specific volume's metadata
+
+        http://localhost/api/cinder/volumes/1/metadata
+        """
+        return api.cinder.volume_get(request,
+                                   volume_id).to_dict().get('metadata')
+
+    @rest_utils.ajax()
+    def patch(self, request, volume_id):
+        """Update metadata items for a server
+
+        http://localhost/api/cinder/volumes/1/metadata
+        """
+        updated = request.DATA['updated']
+        removed = request.DATA['removed']
+        if updated:
+            api.cinder.volume_metadata_update(request, volume_id, updated)
+        if removed:
+            api.cinder.volume_metadata_delete(request, volume_id, removed)
+
 
 @urls.register
 class VolumeTypes(generic.View):

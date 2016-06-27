@@ -34,6 +34,7 @@
     var service = {
       getVolumes: getVolumes,
       getVolume: getVolume,
+      getVolumeMetadata: getVolumeMetadata,
       getVolumeTypes: getVolumeTypes,
       getVolumeType: getVolumeType,
       getDefaultVolumeType: getDefaultVolumeType,
@@ -41,6 +42,7 @@
       getExtensions: getExtensions,
       getQoSSpecs: getQoSSpecs,
       createVolume: createVolume,
+      editVolumeMetadata: editVolumeMetadata,
       getAbsoluteLimits: getAbsoluteLimits,
       getServices: getServices
     };
@@ -103,6 +105,42 @@
         .error(function () {
           toastService.add('error', gettext('Unable to retrieve the volume.'));
         });
+    }
+
+    /**
+     * @name horizon.app.core.openstack-service-api.cinder.getVolumeMetadata
+     * @description
+     * Get a single Volume's metadata by ID.
+     *
+     * @param {string} id
+     * Specifies the id of the Volume to request.
+     *
+     */
+    function getVolumeMetadata(id) {
+      return apiService.get('/api/cinder/volumes/' + id + '/metadata')
+        .error(function () {
+          toastService.add('error', gettext('Unable to retrieve the volume.'));
+        });
+    }
+
+    /**
+     * @name horizon.openstack-service-api.nova.editInstanceMetadata
+     * @description
+     * Update a single instance's metadata by ID.
+     * @param {string} id
+     * @param {object} updated New metadata.
+     * @param {[]} removed Names of removed metadata items.
+     */
+    function editVolumeMetadata(id, updated, removed) {
+      return apiService.patch(
+        '/api/cinder/volumes/' + id + '/metadata',
+        {
+          updated: updated,
+          removed: removed
+        }
+      ).error(function () {
+        toastService.add('error', gettext('Unable to edit instance metadata.'));
+      });
     }
 
     /**

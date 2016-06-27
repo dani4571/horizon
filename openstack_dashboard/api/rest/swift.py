@@ -97,7 +97,10 @@ class Container(generic.View):
 
     @rest_utils.ajax(data_required=True)
     def put(self, request, container):
-        metadata = {'is_public': request.DATA['is_public']}
+        metadata = {}
+        for key, value in request.DATA.items():
+            if key.startswith("X-Container-Meta-") or key == 'is_public':
+                metadata[key] = value
         api.swift.swift_update_container(request, container, metadata=metadata)
 
 

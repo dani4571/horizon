@@ -618,8 +618,8 @@ def flavor_extra_set(request, flavor_id, metadata):
     return flavor.set_keys(metadata)
 
 
-def snapshot_create(request, instance_id, name):
-    return novaclient(request).servers.create_image(instance_id, name)
+def snapshot_create(request, instance_id, name, metadata):
+    return novaclient(request).servers.create_image(instance_id, name, metadata)
 
 
 def keypair_create(request, name):

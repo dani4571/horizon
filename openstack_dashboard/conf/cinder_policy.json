@@ -7,6 +7,8 @@
 
     "volume:create": [],
     "volume:update": [],
+    "volume:update_volume_metadata": "",
+    "volume:delete_volume_metadata": "",
     "volume:delete": [["rule:default"]],
     "volume:get_all": [],
     "volume:get_volume_metadata": [],

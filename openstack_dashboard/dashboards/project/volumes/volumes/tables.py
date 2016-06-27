@@ -152,6 +152,29 @@ class CreateVolume(tables.LinkAction):
         self.allowed(request, None)
         return HttpResponse(self.render(is_table_action=True))
 
+class UpdateMetadata(policy.PolicyTargetMixin, tables.LinkAction):
+    name = "update_metadata"
+    verbose_name = _("Update Metadata")
+    ajax = False
+    icon = "pencil"
+    attrs = {"ng-controller": "MetadataModalHelperController as modal"}
+    policy_rules = (("volume", "volume:update_volume_metadata"),)
+
+    def __init__(self, attrs=None, **kwargs):
+        kwargs['preempt'] = True
+        super(UpdateMetadata, self).__init__(attrs, **kwargs)
+
+    def get_link_url(self, datum):
+        instance_id = self.table.get_object_id(datum)
+        self.attrs['ng-click'] = (
+            "modal.openMetadataModal('volume', '%s', true, 'metadata')"
+            % instance_id)
+        return "javascript:void(0);"
+
+    def allowed(self, request, volume=None):
+        return (volume and
+                volume.status.lower() != 'error')
+
 
 class ExtendVolume(VolumePolicyTargetMixin, tables.LinkAction):
     name = "extend"
@@ -484,7 +507,7 @@ class VolumesTable(VolumesTableBase):
 
         row_actions = ((EditVolume, ExtendVolume,) +
                        launch_actions +
-                       (EditAttachments, CreateSnapshot, CreateBackup,
+                       (UpdateMetadata, EditAttachments, CreateSnapshot, CreateBackup,
                         RetypeVolume, UploadToImage, CreateTransfer,
                         DeleteTransfer, DeleteVolume))
 

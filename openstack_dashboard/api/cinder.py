@@ -323,6 +323,11 @@ def volume_set_bootable(request, volume_id, bootable):
     return cinderclient(request).volumes.set_bootable(volume_id,
                                                       bootable)
 
+def volume_metadata_update(request, volume_id, metadata):
+    cinderclient(request).volumes.set_metadata(volume_id, metadata)
+
+def volume_metadata_delete(request, volume_id, keys):
+    cinderclient(request).volumes.delete_metadata(volume_id, keys)
 
 def volume_update(request, volume_id, name, description):
     vol_data = {'name': name,
@@ -330,6 +335,13 @@ def volume_update(request, volume_id, name, description):
     vol_data = _replace_v2_parameters(vol_data)
     return cinderclient(request).volumes.update(volume_id,
                                                 **vol_data)
+
+def volume_update_meta(request, volume_id, meta):
+    return cinderclient(request).volumes.set_metadata(volume_id, meta)
+
+
+def volume_delete_meta(request, volume_id, meta):
+    return cinderclient(request).volumes.delete_metadata(volume_id, meta.keys())
 
 
 def volume_reset_state(request, volume_id, state):
