@@ -31,7 +31,6 @@
 
   ContainersController.$inject = [
     'horizon.app.core.openstack-service-api.swift',
-    'horizon.app.core.metadata.modal.service',
     'horizon.dashboard.project.containers.containers-model',
     'horizon.dashboard.project.containers.basePath',
     'horizon.dashboard.project.containers.baseRoute',
