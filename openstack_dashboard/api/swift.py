@@ -27,14 +27,12 @@ from horizon import exceptions
 
 from openstack_dashboard.api import base
 
-import logging
 FOLDER_DELIMITER = "/"
 CHUNK_SIZE = getattr(settings, 'SWIFT_FILE_TRANSFER_CHUNK_SIZE', 512 * 1024)
 # Swift ACL
 GLOBAL_READ_ACL = ".r:*"
 LIST_CONTENTS_ACL = ".rlistings"
 
-LOG = logging.getLogger(__name__)
 
 class Container(base.APIDictWrapper):
     pass

@@ -42,7 +42,7 @@
     '$modal'
   ];
 
-  function ContainersController(swiftAPI, metadataModalService, containersModel, basePath, baseRoute, containerRoute,
+  function ContainersController(swiftAPI, containersModel, basePath, baseRoute, containerRoute,
                                 simpleModalService, toastService, $location, $modal)
   {
     var ctrl = this;
